@@ -4,6 +4,9 @@
     {
         internal static void Display()
         {
+            /// <summary>
+            /// Displays the menu defined in <c>Data.menu_options</c> where the keys are the displayed name of the option
+            /// </summary>
             Console.Clear();
             for (int i = 0; i < Data.menu_options.Keys.Count; i++)
             {
@@ -13,10 +16,15 @@
 
         internal static Action DisplayAndGet()
         {
+            /// <summary>
+            /// Displays the menu defined in <c>Data.menu_options</c> and returns the function associated with the selected option
+            /// </summary>
             while (true)
             {
                 Display();
                 Console.Write("Select option: ");
+
+                // return assocciated action if the user enters a correct option
                 if (int.TryParse(Console.ReadLine(), out int selected_option)
                             && (selected_option > 0
                             && selected_option <= Data.menu_options.Count))

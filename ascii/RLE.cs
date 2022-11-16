@@ -33,7 +33,7 @@
                 Console.Write($"Line {i + 1}: ");
                 rle_lines += (Console.ReadLine() + "\n");
             }
-            ASCII.Display(rle_lines);
+            ASCII.DisplayFromRLE(rle_lines);
 
             string response;
             do
