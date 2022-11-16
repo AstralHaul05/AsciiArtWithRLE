@@ -22,7 +22,6 @@
                 Console.Clear();
                 Console.Write("--- ENTER RLE ---\nHow many lines of RLE to enter? (whole number greater than two): ");
                 if (int.TryParse(Console.ReadLine(), out num_lines) && (num_lines > 2)) { break; }
-
             }
 
             Console.Clear();

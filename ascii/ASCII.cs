@@ -35,6 +35,10 @@ namespace ascii
 
         internal static void DisplayFromRLE(string rle_str)
         {
+            /// <summary>
+            ///     Decodes and displays ascii art encoded with RLE
+            /// </summary>
+
             Console.Clear();
             string ascii = Convert(rle_str);
             DisplayASCIIStr(ascii);
@@ -86,17 +90,17 @@ namespace ascii
 
         internal static string Convert(string rle_str)
         {
-            string[] rle_lines = rle_str.Split("\n");
+            /// <summary>
+            ///     Converts RLE string to ASCII art 
+            /// </summary>
 
             string ascii_art = "";
-
-            int len;
-            foreach (string line in rle_lines)
+            foreach (string line in rle_str.Split("\n"))
             {
+                // splits each line into 3 long chunks. any remainder is disregarded
                 foreach (string chunk in Enumerable.Range(0, line.Length / 3).Select(i => line.Substring(i * 3, 3)))
                 {
-                    if (chunk.Length != 3) { return "ERROR"; }
-                    bool suc = int.TryParse(chunk.AsSpan(0, 2), out len);
+                    bool suc = int.TryParse(chunk.AsSpan(0, 2), out int len);
                     if (!suc) { return "ERROR"; }
                     ascii_art += new string(chunk[2], len);
                 }
