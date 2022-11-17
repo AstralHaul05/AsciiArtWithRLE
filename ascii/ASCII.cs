@@ -1,11 +1,12 @@
 ﻿using Microsoft.VisualBasic;
+using System.IO;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace ascii
 {
     internal class ASCII
     {
-        internal static void Display()
+        internal static void PromptAndDisplay()
         {
             /// <summary>
             /// Menu call.
@@ -15,21 +16,28 @@ namespace ascii
             /// </summary>
 
             // Get the ascii art from an existing, valid file
+            string[] paths = Directory.GetFiles("Art\\");
             string ascii;
             while (true)
             {
                 Console.Clear();
-                Console.Write("--- DISPLAY ASCII ART ---\nPath to ASCII art file: ");
-                string ascii_fn = "Art\\" + Console.ReadLine();
-                try
+                Console.WriteLine("--- DISPLAY ASCII ART ---");
+                for (int i = 0; i < paths.Length; i++)
                 {
-                    ascii = File.ReadAllText(ascii_fn);
+                    Console.WriteLine(i + 1 + ". " + paths[i].Substring(4));
+                }
+                Console.Write("Select option: ");
+
+                // return assocciated action if the user enters a correct option
+                if (int.TryParse(Console.ReadLine(), out int selected_option)
+                            && (selected_option > 0
+                            && selected_option <= paths.Length))
+                {
+                    ascii = File.ReadAllText(paths[selected_option - 1]);
                     break;
                 }
-                catch { }
             }
             Console.Clear();
-
             DisplayASCIIStr(ascii);
         }
 
@@ -54,7 +62,7 @@ namespace ascii
             Console.ReadLine();
         }
 
-        internal static void Convert()
+        internal static void ConvertAndDisplayRLE()
         {
             /// <summary>
             /// Menu call.

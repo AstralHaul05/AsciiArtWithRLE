@@ -2,7 +2,7 @@
 {
     internal class RLE
     {
-        internal static void Enter()
+        internal static void EnterAndDisplay()
         {
             /*
                 a.  the user is asked how many lines of RLE compressed data they want to enter
@@ -62,7 +62,7 @@
                 Console.ReadLine();
             }
         }
-        internal static void Convert()
+        internal static void ConvertAndSave()
         {
             /*
                 a.  the user is asked to enter the name of the text file that contains the ASCII art
@@ -79,7 +79,7 @@
             while (!success)
             {
                 Console.Clear();
-                Console.WriteLine("--- CONVERT TO ASCII ---");
+                Console.WriteLine("--- CONVERT TO RLE ---");
                 Console.Write("Path to ASCII Art file: ");
                 ascii_fn = "Art\\" + Console.ReadLine();
                 try
@@ -93,7 +93,7 @@
                 }
             }
             Console.Clear();
-            Console.WriteLine("--- CONVERT TO ASCII ---");
+            Console.WriteLine("--- CONVERT TO RLE ---");
             string ascii_src = File.ReadAllText(ascii_fn);
             Console.Write("Save to: ");
             string fn = "Art\\" + Console.ReadLine();
