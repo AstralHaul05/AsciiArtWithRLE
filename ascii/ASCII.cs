@@ -16,29 +16,8 @@ namespace ascii
             /// </summary>
 
             // Get the ascii art from an existing, valid file
-            string[] paths = Directory.GetFiles("Art\\");
-            string ascii;
-            while (true)
-            {
-                Console.Clear();
-                Console.WriteLine("--- DISPLAY ASCII ART ---");
-                for (int i = 0; i < paths.Length; i++)
-                {
-                    Console.WriteLine(i + 1 + ". " + paths[i].Substring(4));
-                }
-                Console.Write("Select option: ");
-
-                // return assocciated action if the user enters a correct option
-                if (int.TryParse(Console.ReadLine(), out int selected_option)
-                            && (selected_option > 0
-                            && selected_option <= paths.Length))
-                {
-                    ascii = File.ReadAllText(paths[selected_option - 1]);
-                    break;
-                }
-            }
-            Console.Clear();
-            DisplayASCIIStr(ascii);
+            string selected_path = Menu.DisplayAndGet("Ascii Art File", Directory.GetFiles("Art\\"));
+            DisplayASCIIStr(File.ReadAllText(selected_path));
         }
 
         internal static void DisplayFromRLE(string rle_str)
@@ -47,9 +26,8 @@ namespace ascii
             ///     Decodes and displays ascii art encoded with RLE
             /// </summary>
 
-            Console.Clear();
-            string ascii = Convert(rle_str);
-            DisplayASCIIStr(ascii);
+            Menu.Header("Art from RLE");
+            DisplayASCIIStr(ConvertFromRLE(rle_str));
         }
 
         internal static void DisplayASCIIStr(string ascii)
@@ -58,7 +36,8 @@ namespace ascii
             ///     Prints ascii string to console
             /// </summary>
 
-            Console.WriteLine("--- ASCII ART ---\n" + ascii + (ascii.EndsWith("\n") ? "Enter to continue: " : "\nEnter to continue: "));
+            Menu.Header("ASCII Art");
+            Console.WriteLine($"{ascii}\nEnter to return to menu...");
             Console.ReadLine();
         }
 
@@ -74,29 +53,12 @@ namespace ascii
             /// </summary>
 
             // Gets rle string from valid file
-            Console.Clear();
-            Console.WriteLine("--- ASCII FROM RLE ---");
-            string rle;
-            while (true)
-            {
-                Console.Write("Path to ASCII RLE file: ");
-                string rle_fn = "Art\\" + Console.ReadLine();
-                try
-                {
-                    rle = File.ReadAllText(rle_fn);
-                    break;
-                }
-                catch (FileNotFoundException)
-                {
-                    Console.Clear();
-                }
-            }
-            Console.Clear();
-
-            DisplayFromRLE(rle);
+            Menu.Header("ASCII from RLE");
+            string selected_path = Menu.DisplayAndGet("RLE File", Directory.GetFiles("Art\\"));
+            DisplayFromRLE(File.ReadAllText(selected_path));
         }
 
-        internal static string Convert(string rle_str)
+        internal static string ConvertFromRLE(string rle_str)
         {
             /// <summary>
             ///     Converts RLE string to ASCII art 
@@ -108,11 +70,9 @@ namespace ascii
                 // splits each line into 3 long chunks. any remainder is disregarded
                 foreach (string chunk in Enumerable.Range(0, line.Length / 3).Select(i => line.Substring(i * 3, 3)))
                 {
-                    bool suc = int.TryParse(chunk.AsSpan(0, 2), out int len);
-                    if (!suc) { return "ERROR"; }
+                    if (!int.TryParse(chunk.AsSpan(0, 2), out int len)) { return "ERROR"; }
                     ascii_art += new string(chunk[2], len);
                 }
-
                 ascii_art += "\n";
             }
 

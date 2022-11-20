@@ -17,15 +17,14 @@
             */
 
             int num_lines;
-            while (true)
+            do
             {
-                Console.Clear();
-                Console.Write("--- ENTER RLE ---\nHow many lines of RLE to enter? (whole number greater than two): ");
-                if (int.TryParse(Console.ReadLine(), out num_lines) && (num_lines > 2)) { break; }
+                Menu.Header("Enter RLE");
+                Console.Write("How many lines of RLE to enter?: ");
             }
+            while (!int.TryParse(Console.ReadLine(), out num_lines));
 
-            Console.Clear();
-            Console.WriteLine("--- ENTER RLE ---");
+            Menu.Header("Enter RLE");
             string rle_lines = "";
             for (int i = 0; i < num_lines; i++)
             {
@@ -37,8 +36,7 @@
             string response;
             do
             {
-                Console.Clear();
-                Console.WriteLine("--- ENTER RLE ---");
+                Menu.Header("Enter RLE");
                 Console.Write("Save art? (y/n): ");
                 response = Console.ReadLine().ToLower();
             }
@@ -48,8 +46,7 @@
             {
                 while (true)
                 {
-                    Console.Clear();
-                    Console.WriteLine("--- ENTER RLE ---");
+                    Menu.Header("Enter RLE");
                     Console.Write("Filename to save RLE to: ");
                     try
                     {
@@ -73,33 +70,28 @@
                 d.  the user is returned to the main menu. 
             */
 
-            string ascii_fn = "";
+            string ascii_fn = Menu.DisplayAndGet("ASCII Art File to Convert", Directory.GetFiles("Art\\"));
+            string ascii_src = File.ReadAllText(ascii_fn);
 
-            bool success = false;
-            while (!success)
+            Menu.Header("Convert to RLE");
+            
+            string fn;
+            string rle_str;
+            while (true)
             {
-                Console.Clear();
-                Console.WriteLine("--- CONVERT TO RLE ---");
-                Console.Write("Path to ASCII Art file: ");
-                ascii_fn = "Art\\" + Console.ReadLine();
+                Console.Write("Save to: ");
+                fn = "Art\\" + Console.ReadLine();
                 try
                 {
-                    File.ReadAllLines(ascii_fn);
-                    success = true;
+                    rle_str = Convert(ascii_src);
+                    File.WriteAllText(fn, rle_str);
+                    break;
                 }
-                catch
-                {
-                    success = false;
-                }
+                catch { }
             }
-            Console.Clear();
-            Console.WriteLine("--- CONVERT TO RLE ---");
-            string ascii_src = File.ReadAllText(ascii_fn);
-            Console.Write("Save to: ");
-            string fn = "Art\\" + Console.ReadLine();
-            File.WriteAllText(fn, RLE.Convert(ascii_src));
+
             Console.WriteLine($"Compressed to: '{fn}'");
-            Console.WriteLine($"Saved {ascii_src.Length - File.ReadAllText(fn).Length} chars.");
+            Console.WriteLine($"Saved {ascii_src.Length - rle_str.Length} chars.\nEnter to return to main menu...");
             Console.ReadLine();
         }
 
@@ -114,7 +106,9 @@
                 for (int i = 0; i < line.Length - 1; i++)
                 {
                     if (line[i] == line[i + 1])
+                    {
                         c++;
+                    }
                     else
                     {
                         if (c == 1)

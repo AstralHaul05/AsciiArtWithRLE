@@ -4,22 +4,20 @@
     {
         static void Main()
         {
-            while (true)
+            Action selected_action;
+            do
             {
-                Console.Clear();
                 // Gets an action associated with the user selection
-                Action selected_option = Menu.DisplayAndGet();
-                if (selected_option == Exit) { break; }
+                string selected_option = Menu.DisplayAndGet("Main Menu", Menu.menu_options.Keys.ToArray());
+
+                selected_action = Menu.menu_options[selected_option];
 
                 // call action and return to this menu
-                selected_option();
+                selected_action();
             }
+            while (selected_action != Exit);
         }
 
-        internal static void Exit() 
-        { 
-            // Display and get needs to return an action.
-            // Program is quit when this is selected by user
-        }
+        public static void Exit() { }
     }
 }
