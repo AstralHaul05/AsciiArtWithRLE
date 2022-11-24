@@ -17,15 +17,18 @@
             {"Quit", Program.Exit}
         };
 
-        internal static void Display(string header, string[] options)
+        internal static void Display(string header, string[] options, int selection_index)
         {
-            /// <summary>
-            /// Displays the menu defined in <c>Data.menu_options</c> where the keys are the displayed name of the option
-            /// </summary>
-            Menu.Header(header);
+            Header(header);
             for (int i = 0; i < options.Length; i++)
             {
+                if (i == selection_index)
+                {
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.BackgroundColor = ConsoleColor.White;
+                }
                 Console.WriteLine(i + 1 + ". " + options[i]);
+                Console.ResetColor();
             }
         }
 
@@ -34,20 +37,44 @@
             /// <summary>
             /// Displays the menu defined in <c>Data.menu_options</c> and returns the function associated with the selected option
             /// </summary>
-            while (true)
-            {
-                Display(header, options);
-                Console.Write("Select option: ");
 
-                // return assocciated action if the user enters a correct option
-                if (int.TryParse(Console.ReadLine(), out int selected_option)
-                            && (selected_option > 0
-                            && selected_option <= options.Length))
-                {
-                    return options[selected_option - 1];
-                }
+            if (options.Length == 0)
+            {
+                Header(header);
+                Console.WriteLine("No options to display.\nEnter to return.");
+                Console.ReadLine();
+                return "";
             }
 
+            int selected_option = 0;
+            bool option_selected = false;
+            do
+            {
+                Display(header, options, selected_option);
+                ConsoleKeyInfo key = Console.ReadKey();
+                switch (key.Key)
+                {
+                    case ConsoleKey.DownArrow:
+                        if (selected_option < options.Length-1)
+                        {
+                            selected_option++;
+                        }
+                        break;
+                    case ConsoleKey.UpArrow:
+                        if (selected_option > 0)
+                        {
+                            selected_option--;
+                        }
+                        break;
+                    case ConsoleKey.Enter:
+                        option_selected = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            while (!option_selected);
+            return options[selected_option];
         }
     }
 }
