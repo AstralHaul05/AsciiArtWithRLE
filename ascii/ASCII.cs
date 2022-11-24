@@ -17,6 +17,10 @@ namespace ascii
 
             // Get the ascii art from an existing, valid file
             string selected_path = Menu.DisplayAndGet("Ascii Art File", Directory.GetFiles("Art\\"));
+            if (selected_path == "")
+            {
+                return;
+            }
             DisplayASCIIStr(File.ReadAllText(selected_path));
         }
 
